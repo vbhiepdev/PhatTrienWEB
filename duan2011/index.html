@@ -1,0 +1,977 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tri Ân Ngày Nhà Giáo Việt Nam 20/11 - Người Lái Đò Thầm Lặng</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Fonts: Playfair Display, Lora & Plus Jakarta Sans (Hỗ trợ đầy đủ tiếng Việt) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,500;1,600&family=Plus+Jakarta+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        parchment: '#FAF6EE',
+                        parchmentDark: '#F0E6D2',
+                        burgundy: '#6E1E2A',
+                        burgundyDark: '#4D121B',
+                        gold: '#C59B27',
+                        goldLight: '#E5C466',
+                        navy: '#1B2A4A',
+                        ink: '#2C241E'
+                    },
+                    fontFamily: {
+                        display: ['"Playfair Display"', 'serif'],
+                        serif: ['"Lora"', 'serif'],
+                        sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        /* Tùy chỉnh thanh cuộn và nền giấy cổ điển */
+        body {
+            background-color: #FAF6EE;
+            color: #2C241E;
+            overflow-x: hidden;
+            background-image: 
+                radial-gradient(circle at 20% 20%, rgba(197, 155, 39, 0.08) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(110, 30, 42, 0.06) 0%, transparent 50%);
+        }
+
+        /* Hiệu ứng vân giấy tinh tế */
+        .paper-texture {
+            background-color: #FCF9F2;
+            background-image: linear-gradient(to right, rgba(197, 155, 39, 0.04) 1px, transparent 1px),
+                              linear-gradient(to bottom, rgba(197, 155, 39, 0.04) 1px, transparent 1px);
+            background-size: 24px 24px;
+            box-shadow: 0 20px 50px rgba(27, 42, 74, 0.12), 0 0 0 1px rgba(197, 155, 39, 0.3);
+        }
+
+        /* Khung viền kép cổ điển */
+        .ornate-border {
+            position: relative;
+            border: 1.5px solid rgba(197, 155, 39, 0.55);
+        }
+        .ornate-border::before {
+            content: '';
+            position: absolute;
+            inset: 5px;
+            border: 1px solid rgba(110, 30, 42, 0.25);
+            pointer-events: none;
+        }
+
+        /* Hiệu ứng Phong Thư Mở Đầu */
+        #envelope-overlay {
+            transition: opacity 0.9s cubic-bezier(0.4, 0, 0.2, 1), visibility 0.9s;
+        }
+        #envelope-overlay.opened {
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+        }
+
+        .envelope-wrapper {
+            perspective: 1200px;
+        }
+
+        .envelope-card {
+            transition: transform 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
+            transform-style: preserve-3d;
+        }
+
+        .envelope-flap {
+            transform-origin: top center;
+            transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+            clip-path: polygon(0 0, 50% 58%, 100% 0);
+        }
+
+        .envelope-opening .envelope-flap {
+            transform: rotateX(180deg);
+        }
+
+        .envelope-opening .wax-seal {
+            transform: scale(0.8) translateY(-20px);
+            opacity: 0;
+        }
+
+        .wax-seal {
+            background: radial-gradient(circle at 30% 30%, #8E2434, #59111C);
+            box-shadow: 0 8px 20px rgba(77, 18, 27, 0.45), inset 0 2px 4px rgba(255, 255, 255, 0.25), inset 0 -3px 6px rgba(0, 0, 0, 0.4);
+            transition: all 0.5s ease;
+        }
+        .wax-seal:hover {
+            transform: scale(1.06);
+            box-shadow: 0 12px 26px rgba(110, 30, 42, 0.6), inset 0 2px 5px rgba(255, 255, 255, 0.35);
+        }
+
+        /* Hiệu ứng xuất hiện nội dung chính */
+        .reveal-section {
+            opacity: 0;
+            transform: translateY(24px);
+            transition: opacity 0.9s ease-out, transform 0.9s ease-out;
+        }
+        .reveal-section.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Nhịp đập nhẹ cho dấu sáp và hoa */
+        @keyframes softPulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.04); }
+        }
+        .animate-soft-pulse {
+            animation: softPulse 3s infinite ease-in-out;
+        }
+
+        @keyframes floatFlower {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-6px) rotate(2deg); }
+        }
+        .flower-btn:hover svg {
+            animation: floatFlower 2s infinite ease-in-out;
+        }
+
+        /* Chế độ chụp ảnh lưu niệm (ẩn các nút điều khiển không cần thiết khi in/xem toàn cảnh) */
+        body.keepsake-mode .no-keepsake {
+            display: none !important;
+        }
+    </style>
+</head>
+<body class="font-serif antialiased selection:bg-burgundy selection:text-parchment min-h-screen relative">
+
+    <!-- Canvas hiệu ứng cánh hoa rơi & ánh sáng lung linh ở nền -->
+    <canvas id="petals-canvas" class="fixed inset-0 pointer-events-none z-10"></canvas>
+
+    <!-- Nút điều khiển nổi góc trên bên phải (Âm thanh & Xem lại phong thư) -->
+    <div class="fixed top-4 right-4 z-40 flex items-center gap-2 no-keepsake">
+        <button id="toggle-music-btn" onclick="toggleAudio()" title="Bật / Tắt nhạc nền Piano"
+            class="flex items-center gap-2 px-3.5 py-2 rounded-full bg-parchment/90 backdrop-blur-md border border-gold/60 text-burgundy shadow-md hover:bg-burgundy hover:text-parchment transition-all duration-300 font-sans text-xs sm:text-sm font-medium">
+            <span id="music-icon-on" class="hidden flex items-center gap-1.5">
+                <svg class="w-4 h-4 animate-pulse" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3"/>
+                </svg>
+                <span class="hidden sm:inline">Đang phát nhạc</span>
+            </span>
+            <span id="music-icon-off" class="flex items-center gap-1.5">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z" />
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2" />
+                </svg>
+                <span class="hidden sm:inline">Nhạc nền</span>
+            </span>
+        </button>
+
+        <button id="replay-envelope-btn" onclick="replayEnvelope()" title="Xem lại phong thư mở đầu"
+            class="flex items-center gap-1.5 px-3.5 py-2 rounded-full bg-parchment/90 backdrop-blur-md border border-gold/60 text-navy shadow-md hover:bg-navy hover:text-parchment transition-all duration-300 font-sans text-xs sm:text-sm font-medium">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+            </svg>
+            <span class="hidden sm:inline">Phong thư</span>
+        </button>
+    </div>
+
+    <!-- Thông báo Toast (Thay thế alert) -->
+    <div id="toast-box" class="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 pointer-events-none opacity-0 transition-all duration-300 transform translate-y-4">
+        <div class="px-5 py-3 rounded-full bg-navy text-parchment border border-gold/60 shadow-xl font-sans text-sm flex items-center gap-2.5">
+            <span class="w-2 h-2 rounded-full bg-gold"></span>
+            <span id="toast-message">Thông báo</span>
+        </div>
+    </div>
+
+    <!-- ===================================================================== -->
+    <!-- MÀN HÌNH MỞ ĐẦU: PHONG THƯ DẤU SÁP TRANG TRỌNG                        -->
+    <!-- ===================================================================== -->
+    <div id="envelope-overlay" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#26171A]/90 backdrop-blur-sm">
+        <div class="envelope-wrapper w-full max-w-lg mx-auto">
+            <div id="envelope-box" onclick="openInvitation()" class="envelope-card cursor-pointer relative w-full aspect-[4/3] sm:aspect-[16/11] bg-[#F5ECD8] rounded-xl shadow-2xl border-2 border-gold/70 overflow-hidden flex flex-col items-center justify-between p-6 sm:p-8 select-none">
+                
+                <!-- Nắp phong thư phía trên -->
+                <div class="envelope-flap absolute inset-x-0 top-0 h-3/4 bg-gradient-to-b from-[#EADBC0] to-[#F3E7CE] border-b border-gold/40 shadow-md z-10"></div>
+
+                <!-- Họa tiết góc cổ điển -->
+                <div class="w-full flex justify-between items-start z-20 pointer-events-none opacity-75">
+                    <svg class="w-8 h-8 text-gold" viewBox="0 0 40 40" fill="none">
+                        <path d="M2 2H20C10 2 2 10 2 20V2Z" fill="currentColor"/>
+                        <path d="M2 2H34M2 2V34" stroke="currentColor" stroke-width="1.5"/>
+                    </svg>
+                    <span class="font-display italic text-xs sm:text-sm tracking-widest uppercase text-burgundy/80 mt-1">Kính Tặng Thầy Cô</span>
+                    <svg class="w-8 h-8 text-gold rotate-90" viewBox="0 0 40 40" fill="none">
+                        <path d="M2 2H20C10 2 2 10 2 20V2Z" fill="currentColor"/>
+                        <path d="M2 2H34M2 2V34" stroke="currentColor" stroke-width="1.5"/>
+                    </svg>
+                </div>
+
+                <!-- Dấu sáp (Wax Seal) ở trung tâm -->
+                <div class="relative z-30 flex flex-col items-center my-auto">
+                    <button type="button" aria-label="Mở thiệp tri ân" class="wax-seal animate-soft-pulse w-24 h-24 sm:w-28 sm:h-28 rounded-full flex flex-col items-center justify-center border-2 border-goldLight/60 text-goldLight p-2 text-center">
+                        <div class="w-full h-full rounded-full border border-dashed border-goldLight/50 flex flex-col items-center justify-center">
+                            <span class="font-display font-bold text-lg sm:text-xl tracking-wider leading-none">20/11</span>
+                            <span class="font-serif text-[10px] sm:text-xs italic mt-1 text-parchment/95">Tri Ân<br>Thầy Cô</span>
+                        </div>
+                    </button>
+                </div>
+
+                <!-- Lời mời mở thiệp phía dưới -->
+                <div class="z-20 text-center">
+                    <p class="font-display text-burgundy font-semibold text-base sm:text-lg tracking-wide">
+                        Thiệp Mừng Ngày Nhà Giáo Việt Nam
+                    </p>
+                    <p class="font-sans text-xs sm:text-sm text-navy/80 mt-1.5 flex items-center justify-center gap-1.5">
+                        <span class="inline-block w-1.5 h-1.5 rounded-full bg-burgundy animate-ping"></span>
+                        Nhấn vào dấu sáp để mở thiệp
+                    </p>
+                </div>
+
+                <!-- Viền trang trí dưới -->
+                <div class="absolute inset-2 border border-gold/40 rounded-lg pointer-events-none z-20"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===================================================================== -->
+    <!-- NỘI DUNG CHÍNH CỦA THIỆP TRI ÂN                                       -->
+    <!-- ===================================================================== -->
+    <main id="main-card-container" class="relative z-20 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16">
+        
+        <!-- TẤM THIỆP CHÍNH -->
+        <article id="printable-card" class="paper-texture ornate-border rounded-2xl p-6 sm:p-10 md:p-14 transition-all duration-500">
+            
+            <!-- Họa tiết hoa văn đỉnh thiệp -->
+            <div class="reveal-section flex flex-col items-center text-center mb-8 sm:mb-10">
+                <!-- Biểu tượng ngòi bút & quyển sách vàng ánh kim -->
+                <div class="w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-burgundy/5 border border-gold/50 flex items-center justify-center mb-5 shadow-inner">
+                    <svg class="w-9 h-9 sm:w-11 sm:h-11 text-burgundy" viewBox="0 0 64 64" fill="none">
+                        <path d="M12 46C12 43.7909 13.7909 42 16 42H48C50.2091 42 52 43.7909 52 46V50C52 51.1046 51.1046 52 50 52H14C12.8954 52 12 51.1046 12 50V46Z" stroke="#C59B27" stroke-width="2"/>
+                        <path d="M16 42V20C16 17.7909 17.7909 16 20 16H32V42" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                        <path d="M48 42V20C48 17.7909 46.2091 16 44 16H32V42" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                        <path d="M32 10L34.5 14L32 16L29.5 14L32 10Z" fill="#C59B27"/>
+                    </svg>
+                </div>
+
+                <p class="font-sans uppercase tracking-[0.25em] text-xs sm:text-sm text-gold font-semibold mb-2">
+                    Kỷ Niệm Ngày Nhà Giáo Việt Nam • 20 Tháng 11
+                </p>
+                
+                <h1 class="font-display text-3xl sm:text-4xl md:text-5xl font-bold text-burgundy leading-tight">
+                    Chào Mừng Ngày Nhà Giáo Việt Nam 20/11
+                </h1>
+
+                <div class="flex items-center justify-center gap-3 my-4 w-full max-w-xs">
+                    <span class="h-[1px] flex-1 bg-gradient-to-r from-transparent to-gold"></span>
+                    <span class="text-gold text-lg">❖</span>
+                    <span class="h-[1px] flex-1 bg-gradient-to-l from-transparent to-gold"></span>
+                </div>
+
+                <h2 class="font-display italic text-xl sm:text-2xl md:text-3xl text-navy font-medium">
+                    “Người Lái Đò Thầm Lặng”
+                </h2>
+            </div>
+
+            <!-- LỜI CHÚC CÁ NHÂN HÓA HIỂN THỊ TRÊN THIỆP -->
+            <section class="reveal-section my-8 sm:my-10 bg-gradient-to-b from-parchmentDark/60 to-parchment/80 border border-gold/45 rounded-xl p-6 sm:p-9 shadow-sm relative">
+                <!-- Dấu ngoặc kép trang trí -->
+                <span class="font-display text-6xl text-gold/25 absolute top-2 left-4 select-none leading-none">“</span>
+                
+                <div class="relative z-10 space-y-4">
+                    <p id="card-salutation" class="font-display italic text-xl sm:text-2xl text-burgundy font-semibold">
+                        Kính gửi Quý Thầy Cô đáng kính,
+                    </p>
+                    
+                    <p id="card-message" class="font-serif text-base sm:text-lg md:text-[19px] text-ink leading-relaxed sm:leading-loose text-justify">
+                        Nhân ngày Nhà giáo Việt Nam 20/11, xin gửi tới Quý Thầy Cô lời tri ân sâu sắc và lòng biết ơn chân thành nhất. Cảm ơn Thầy Cô đã luôn tận tụy, kiên nhẫn thắp sáng ngọn lửa tri thức, uốn nắn từng nét chữ, dạy dỗ từng bài học làm người để chúng em vững bước vào đời. Kính chúc Thầy Cô luôn dồi dào sức khỏe, hạnh phúc và mãi giữ trọn ngọn lửa nhiệt huyết với sự nghiệp trồng người cao quý.
+                    </p>
+
+                    <div class="pt-4 flex flex-col sm:flex-row sm:items-end justify-between gap-4 border-t border-gold/25">
+                        <div class="text-xs sm:text-sm text-navy/70 italic">
+                            Mùa Hiến Chương Nhà Giáo 20/11
+                        </div>
+                        <div class="text-right">
+                            <p class="font-serif italic text-sm text-ink/80">Kính thư,</p>
+                            <p id="card-sender" class="font-display font-bold text-lg sm:text-xl text-navy mt-0.5">
+                                Học trò của Thầy Cô
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- THƠ TRI ÂN TRANG TRỌNG -->
+            <section class="reveal-section my-10 text-center max-w-xl mx-auto">
+                <div class="inline-block px-4 py-1 rounded-full bg-burgundy/10 text-burgundy font-sans text-xs uppercase tracking-widest font-semibold mb-4">
+                    Vần Thơ Tri Ân
+                </div>
+                <blockquote class="font-serif italic text-base sm:text-lg text-navy/90 leading-relaxed space-y-1.5 bg-white/50 py-6 px-6 rounded-xl border border-gold/30">
+                    <p>“Có một nghề bụi phấn bám đầy tay</p>
+                    <p>Người ta bảo đó là nghề trong sạch nhất</p>
+                    <p>Có một nghề không trồng cây vào đất</p>
+                    <p>Mà mang lại cho đời đầy trái ngọt hoa tươi.”</p>
+                </blockquote>
+            </section>
+
+            <!-- KHU VỰC TƯƠNG TÁC 1: ĐÓA HOA TRI ÂN (INTERACTIVE BOUQUET) -->
+            <section class="reveal-section my-10 pt-8 border-t border-gold/35">
+                <div class="text-center mb-6">
+                    <h3 class="font-display text-2xl sm:text-3xl font-bold text-burgundy">
+                        Đóa Hoa Tri Ân Kính Tặng
+                    </h3>
+                    <p class="font-serif text-sm sm:text-base text-ink/80 mt-1.5">
+                        Chạm vào từng loài hoa để gửi gắm thông điệp trân quý nhất tới Thầy Cô
+                    </p>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-5">
+                    <!-- Hoa 1: Hoa Hướng Dương -->
+                    <button type="button" onclick="selectFlower('sunflower')" id="flower-sunflower"
+                        class="flower-btn group p-5 rounded-xl bg-parchment border border-gold/40 hover:border-gold hover:shadow-lg transition-all duration-300 flex flex-col items-center text-center">
+                        <div class="w-16 h-16 rounded-full bg-amber-100/70 flex items-center justify-center mb-3 group-hover:scale-110 transition-transform">
+                            <!-- SVG Hoa Hướng Dương -->
+                            <svg class="w-11 h-11" viewBox="0 0 64 64" fill="none">
+                                <g fill="#EAB308" stroke="#CA8A04" stroke-width="1">
+                                    <ellipse cx="32" cy="12" rx="4" ry="9"/>
+                                    <ellipse cx="32" cy="52" rx="4" ry="9"/>
+                                    <ellipse cx="12" cy="32" rx="9" ry="4"/>
+                                    <ellipse cx="52" cy="32" rx="9" ry="4"/>
+                                    <ellipse cx="18" cy="18" rx="4" ry="9" transform="rotate(-45 18 18)"/>
+                                    <ellipse cx="46" cy="46" rx="4" ry="9" transform="rotate(-45 46 46)"/>
+                                    <ellipse cx="46" cy="18" rx="4" ry="9" transform="rotate(45 46 18)"/>
+                                    <ellipse cx="18" cy="46" rx="4" ry="9" transform="rotate(45 18 46)"/>
+                                </g>
+                                <circle cx="32" cy="32" r="11" fill="#5C3A21" stroke="#3E2723" stroke-width="1.5"/>
+                                <circle cx="29" cy="29" r="1.2" fill="#D97706"/>
+                                <circle cx="35" cy="30" r="1.2" fill="#D97706"/>
+                                <circle cx="32" cy="35" r="1.2" fill="#D97706"/>
+                            </svg>
+                        </div>
+                        <span class="font-display font-bold text-lg text-navy">Hoa Hướng Dương</span>
+                        <span class="font-sans text-xs text-gold font-medium mt-0.5">Niềm Tin & Ánh Sáng</span>
+                        <span class="mt-3 text-xs font-sans px-3 py-1 rounded-full bg-gold/15 text-burgundy font-medium">
+                            Đã tặng: <strong id="count-sunflower">0</strong> đóa
+                        </span>
+                    </button>
+
+                    <!-- Hoa 2: Hoa Hồng Vàng -->
+                    <button type="button" onclick="selectFlower('rose')" id="flower-rose"
+                        class="flower-btn group p-5 rounded-xl bg-parchment border border-gold/40 hover:border-gold hover:shadow-lg transition-all duration-300 flex flex-col items-center text-center">
+                        <div class="w-16 h-16 rounded-full bg-yellow-100/70 flex items-center justify-center mb-3 group-hover:scale-110 transition-transform">
+                            <!-- SVG Hoa Hồng Vàng -->
+                            <svg class="w-11 h-11" viewBox="0 0 64 64" fill="none">
+                                <path d="M32 38V56" stroke="#15803D" stroke-width="2.5" stroke-linecap="round"/>
+                                <path d="M32 47C26 47 22 43 22 43C22 43 26 40 32 44" fill="#22C55E"/>
+                                <path d="M32 44C38 44 42 40 42 40C42 40 38 37 32 41" fill="#16A34A"/>
+                                <path d="M20 26C20 18 25 13 32 13C39 13 44 18 44 26C44 33 38 38 32 38C26 38 20 33 20 26Z" fill="#FACC15" stroke="#CA8A04" stroke-width="1.5"/>
+                                <path d="M24 25C24 20 27.5 17 32 17C36.5 17 40 20 40 25C40 29.5 36.5 33 32 33C27.5 33 24 29.5 24 25Z" fill="#FDE047" stroke="#EAB308" stroke-width="1.2"/>
+                                <path d="M28 24C28 21.5 30 20 32 20C34 20 36 21.5 36 24C36 26.5 34 28 32 28C30 28 28 26.5 28 24Z" fill="#FEF08A" stroke="#CA8A04" stroke-width="1"/>
+                            </svg>
+                        </div>
+                        <span class="font-display font-bold text-lg text-navy">Hoa Hồng Vàng</span>
+                        <span class="font-sans text-xs text-gold font-medium mt-0.5">Lòng Biết Ơn Sâu Sắc</span>
+                        <span class="mt-3 text-xs font-sans px-3 py-1 rounded-full bg-gold/15 text-burgundy font-medium">
+                            Đã tặng: <strong id="count-rose">0</strong> đóa
+                        </span>
+                    </button>
+
+                    <!-- Hoa 3: Hoa Sen -->
+                    <button type="button" onclick="selectFlower('lotus')" id="flower-lotus"
+                        class="flower-btn group p-5 rounded-xl bg-parchment border border-gold/40 hover:border-gold hover:shadow-lg transition-all duration-300 flex flex-col items-center text-center">
+                        <div class="w-16 h-16 rounded-full bg-rose-100/60 flex items-center justify-center mb-3 group-hover:scale-110 transition-transform">
+                            <!-- SVG Hoa Sen -->
+                            <svg class="w-11 h-11" viewBox="0 0 64 64" fill="none">
+                                <path d="M32 14C36 22 38 30 32 42C26 30 28 22 32 14Z" fill="#F472B6" stroke="#DB2777" stroke-width="1.3"/>
+                                <path d="M23 19C28 24 31 32 30 42C22 36 20 27 23 19Z" fill="#F9A8D4" stroke="#DB2777" stroke-width="1.3"/>
+                                <path d="M41 19C36 24 33 32 34 42C42 36 44 27 41 19Z" fill="#F9A8D4" stroke="#DB2777" stroke-width="1.3"/>
+                                <path d="M14 27C21 29 27 35 29 42C19 41 14 35 14 27Z" fill="#FBCFE8" stroke="#DB2777" stroke-width="1.3"/>
+                                <path d="M50 27C43 29 37 35 35 42C45 41 50 35 50 27Z" fill="#FBCFE8" stroke="#DB2777" stroke-width="1.3"/>
+                                <path d="M18 45C24 47 40 47 46 45" stroke="#15803D" stroke-width="2.5" stroke-linecap="round"/>
+                            </svg>
+                        </div>
+                        <span class="font-display font-bold text-lg text-navy">Hoa Sen Thanh Cao</span>
+                        <span class="font-sans text-xs text-gold font-medium mt-0.5">Tâm Hồn Cao Quý</span>
+                        <span class="mt-3 text-xs font-sans px-3 py-1 rounded-full bg-gold/15 text-burgundy font-medium">
+                            Đã tặng: <strong id="count-lotus">0</strong> đóa
+                        </span>
+                    </button>
+                </div>
+
+                <!-- Hộp hiển thị thông điệp khi nhấn tặng hoa -->
+                <div id="flower-message-box" class="mt-5 p-4 sm:p-5 rounded-xl bg-burgundy text-parchment text-center transition-all duration-300 shadow-md">
+                    <p id="flower-message-title" class="font-display font-semibold text-base sm:text-lg text-goldLight">
+                        Bó Hoa Tri Ân Đang Chờ Đón
+                    </p>
+                    <p id="flower-message-desc" class="font-serif italic text-sm sm:text-base mt-1 text-parchment/95">
+                        Hãy chọn một loài hoa bên trên để dâng tặng lên Thầy Cô kính yêu!
+                    </p>
+                </div>
+            </section>
+
+        </article>
+
+        <!-- ===================================================================== -->
+        <!-- KHU VỰC TƯƠNG TÁC 2: SỔ LƯU BÚT & CÁ NHÂN HÓA LỜI CHÚC                -->
+        <!-- ===================================================================== -->
+        <section id="personalize-section" class="reveal-section no-keepsake mt-10 paper-texture ornate-border rounded-2xl p-6 sm:p-10">
+            <div class="text-center mb-7">
+                <span class="font-sans text-xs uppercase tracking-[0.2em] text-gold font-semibold">
+                    Gửi Trọn Tâm Tình
+                </span>
+                <h3 class="font-display text-2xl sm:text-3xl font-bold text-navy mt-1">
+                    Sổ Lưu Bút & Cá Nhân Hóa Thiệp
+                </h3>
+                <p class="font-serif text-sm sm:text-base text-ink/80 mt-1.5 max-w-xl mx-auto">
+                    Điền tên Thầy/Cô và lựa chọn lời chúc ý nghĩa để tạo nên tấm thiệp dành riêng cho người lái đò của bạn.
+                </p>
+            </div>
+
+            <form id="custom-card-form" onsubmit="updateCard(event)" class="space-y-5 font-sans">
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                    <!-- Chọn danh xưng -->
+                    <div>
+                        <label for="input-honorific" class="block text-xs font-semibold uppercase tracking-wider text-navy mb-1.5">
+                            Danh xưng
+                        </label>
+                        <select id="input-honorific" class="w-full px-4 py-2.5 rounded-lg bg-white border border-gold/50 text-ink focus:outline-none focus:ring-2 focus:ring-burgundy/40 focus:border-burgundy transition">
+                            <option value="Quý Thầy Cô">Quý Thầy Cô</option>
+                            <option value="Thầy">Thầy</option>
+                            <option value="Cô">Cô</option>
+                            <option value="Thầy Giáo">Thầy Giáo</option>
+                            <option value="Cô Giáo">Cô Giáo</option>
+                        </select>
+                    </div>
+
+                    <!-- Nhập tên Thầy/Cô -->
+                    <div class="sm:col-span-2">
+                        <label for="input-teacher-name" class="block text-xs font-semibold uppercase tracking-wider text-navy mb-1.5">
+                            Tên Thầy / Cô (Không bắt buộc)
+                        </label>
+                        <input type="text" id="input-teacher-name" placeholder="Ví dụ: Nguyễn Văn An, Thanh Hương..."
+                            class="w-full px-4 py-2.5 rounded-lg bg-white border border-gold/50 text-ink placeholder:text-ink/40 focus:outline-none focus:ring-2 focus:ring-burgundy/40 focus:border-burgundy transition">
+                    </div>
+                </div>
+
+                <!-- Chọn nhanh mẫu lời chúc -->
+                <div>
+                    <label class="block text-xs font-semibold uppercase tracking-wider text-navy mb-2">
+                        Chọn nhanh mẫu lời chúc ý nghĩa
+                    </label>
+                    <div class="flex flex-wrap gap-2">
+                        <button type="button" onclick="applyPresetMessage(0)" class="preset-btn px-3 py-1.5 rounded-full text-xs font-medium bg-burgundy text-parchment border border-burgundy transition">
+                            1. Tri ân trang trọng
+                        </button>
+                        <button type="button" onclick="applyPresetMessage(1)" class="preset-btn px-3 py-1.5 rounded-full text-xs font-medium bg-white text-navy border border-gold/50 hover:border-burgundy transition">
+                            2. Kính tặng Thầy
+                        </button>
+                        <button type="button" onclick="applyPresetMessage(2)" class="preset-btn px-3 py-1.5 rounded-full text-xs font-medium bg-white text-navy border border-gold/50 hover:border-burgundy transition">
+                            3. Kính tặng Cô
+                        </button>
+                        <button type="button" onclick="applyPresetMessage(3)" class="preset-btn px-3 py-1.5 rounded-full text-xs font-medium bg-white text-navy border border-gold/50 hover:border-burgundy transition">
+                            4. Cựu học sinh nhớ trường
+                        </button>
+                        <button type="button" onclick="applyPresetMessage(4)" class="preset-btn px-3 py-1.5 rounded-full text-xs font-medium bg-white text-navy border border-gold/50 hover:border-burgundy transition">
+                            5. Lời chúc ngắn gọn, sâu sắc
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Nội dung lời chúc -->
+                <div>
+                    <label for="input-message" class="block text-xs font-semibold uppercase tracking-wider text-navy mb-1.5">
+                        Nội dung lời chúc
+                    </label>
+                    <textarea id="input-message" rows="4" required
+                        class="w-full px-4 py-3 rounded-lg bg-white border border-gold/50 text-ink font-serif text-base leading-relaxed focus:outline-none focus:ring-2 focus:ring-burgundy/40 focus:border-burgundy transition">Nhân ngày Nhà giáo Việt Nam 20/11, xin gửi tới Quý Thầy Cô lời tri ân sâu sắc và lòng biết ơn chân thành nhất. Cảm ơn Thầy Cô đã luôn tận tụy, kiên nhẫn thắp sáng ngọn lửa tri thức, uốn nắn từng nét chữ, dạy dỗ từng bài học làm người để chúng em vững bước vào đời. Kính chúc Thầy Cô luôn dồi dào sức khỏe, hạnh phúc và mãi giữ trọn ngọn lửa nhiệt huyết với sự nghiệp trồng người cao quý.</textarea>
+                </div>
+
+                <!-- Tên người gửi -->
+                <div>
+                    <label for="input-sender" class="block text-xs font-semibold uppercase tracking-wider text-navy mb-1.5">
+                        Người gửi lời chúc
+                    </label>
+                    <input type="text" id="input-sender" value="Học trò của Thầy Cô" placeholder="Ví dụ: Tập thể lớp 12A1, Học trò Minh Anh..."
+                        class="w-full px-4 py-2.5 rounded-lg bg-white border border-gold/50 text-ink focus:outline-none focus:ring-2 focus:ring-burgundy/40 focus:border-burgundy transition">
+                </div>
+
+                <!-- Các nút hành động -->
+                <div class="pt-2 flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4">
+                    <button type="submit"
+                        class="w-full sm:w-auto px-7 py-3 rounded-full bg-burgundy hover:bg-burgundyDark text-parchment font-semibold text-sm shadow-lg hover:shadow-xl transition-all duration-300 flex items-center justify-center gap-2">
+                        <svg class="w-4 h-4 text-goldLight" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/>
+                        </svg>
+                        Cập Nhật Thiệp Tri Ân
+                    </button>
+
+                    <button type="button" onclick="copyCardText()"
+                        class="w-full sm:w-auto px-6 py-3 rounded-full bg-white hover:bg-parchmentDark text-navy border border-gold/60 font-semibold text-sm shadow-sm transition-all duration-300 flex items-center justify-center gap-2">
+                        <svg class="w-4 h-4 text-burgundy" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3"/>
+                        </svg>
+                        Sao Chép Lời Chúc
+                    </button>
+
+                    <button type="button" onclick="toggleKeepsakeMode()"
+                        class="w-full sm:w-auto px-6 py-3 rounded-full bg-navy hover:bg-navy/90 text-parchment font-semibold text-sm shadow-sm transition-all duration-300 flex items-center justify-center gap-2">
+                        <svg class="w-4 h-4 text-goldLight" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"/>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"/>
+                        </svg>
+                        Chế Độ Chụp Ảnh Lưu Niệm
+                    </button>
+                </div>
+            </form>
+        </section>
+
+        <!-- Nút thoát chế độ chụp ảnh lưu niệm (chỉ hiện khi bật chế độ lưu niệm) -->
+        <div id="exit-keepsake-bar" class="hidden fixed bottom-6 left-1/2 -translate-x-1/2 z-50">
+            <button onclick="toggleKeepsakeMode()" class="px-6 py-3 rounded-full bg-burgundy text-parchment border border-gold shadow-2xl font-sans text-sm font-semibold flex items-center gap-2 hover:bg-burgundyDark transition">
+                <span>Thoát chế độ chụp ảnh lưu niệm</span>
+            </button>
+        </div>
+
+        <!-- Footer trang trọng -->
+        <footer class="mt-10 text-center text-xs sm:text-sm text-navy/70 font-serif">
+            <p>“Tôn sư trọng đạo” — Kính chúc Quý Thầy Cô một mùa Hiến chương 20/11 trọn vẹn niềm vui và hạnh phúc.</p>
+        </footer>
+    </main>
+
+    <!-- ===================================================================== -->
+    <!-- JAVASCRIPT: WEB AUDIO PIANO, CANVAS HOA RƠI & TƯƠNG TÁC THIỆP         -->
+    <!-- ===================================================================== -->
+    <script>
+        // -------------------------------------------------------------------------
+        // 1. DỮ LIỆU MẪU LỜI CHÚC & THÔNG ĐIỆP HOA
+        // -------------------------------------------------------------------------
+        const presetMessages = [
+            "Nhân ngày Nhà giáo Việt Nam 20/11, xin gửi tới Quý Thầy Cô lời tri ân sâu sắc và lòng biết ơn chân thành nhất. Cảm ơn Thầy Cô đã luôn tận tụy, kiên nhẫn thắp sáng ngọn lửa tri thức, uốn nắn từng nét chữ, dạy dỗ từng bài học làm người để chúng em vững bước vào đời. Kính chúc Thầy Cô luôn dồi dào sức khỏe, hạnh phúc và mãi giữ trọn ngọn lửa nhiệt huyết với sự nghiệp trồng người cao quý.",
+            "Nhân ngày 20/11, em xin kính chúc Thầy luôn mạnh khỏe, bình an và vững tay chèo trên con thuyền tri thức. Những bài giảng tâm huyết và sự nghiêm khắc đầy bao dung của Thầy mãi là hành trang quý giá nhất theo em trên mọi chặng đường trưởng thành.",
+            "Chúc mừng Cô nhân ngày Nhà giáo Việt Nam 20/11! Cảm ơn Cô vì những bài giảng dịu dàng, sự ân cần chăm sóc và tình yêu thương vô bờ bến dành cho chúng em. Kính chúc Cô luôn tươi trẻ, rạng rỡ, tràn đầy niềm vui và gặt hái thật nhiều thành công trong sự nghiệp trồng người.",
+            "Dù đã rời xa mái trường thân yêu, nhưng mỗi dịp 20/11 về, lòng em lại bồi hồi nhớ về bảng đen, phấn trắng và bóng dáng Thầy Cô tận tụy trên bục giảng. Kính chúc Thầy Cô luôn an khang, trường thọ và mãi là ngọn hải đăng soi sáng cho bao thế hệ học trò.",
+            "Kính chúc Thầy Cô ngày Nhà giáo Việt Nam 20/11 thật nhiều sức khỏe, niềm vui và hạnh phúc. Cảm ơn Thầy Cô đã chắp cánh ước mơ và dạy chúng em nên người!"
+        ];
+
+        const flowerData = {
+            sunflower: {
+                title: "🌻 Hoa Hướng Dương — Biểu Tượng Của Niềm Tin & Ánh Sáng",
+                desc: "Thầy Cô chính là ánh mặt trời ấm áp dẫn lối, giúp chúng em luôn hướng về phía trước với niềm tin, nghị lực và khát vọng vươn cao."
+            },
+            rose: {
+                title: "🌹 Hoa Hồng Vàng — Lòng Biết Ơn & Sự Trân Trọng",
+                desc: "Sắc vàng ấm áp thay cho ngàn lời cảm ơn chân thành nhất gửi tới những hy sinh thầm lặng và tâm huyết của Thầy Cô."
+            },
+            lotus: {
+                title: "🪷 Hoa Sen — Sự Thanh Cao & Tâm Hồn Cao Quý",
+                desc: "Tôn vinh phẩm chất thanh cao, trong sáng và nhân cách mẫu mực của người làm nghề giáo — nghề cao quý nhất trong những nghề cao quý."
+            }
+        };
+
+        const flowerCounts = { sunflower: 0, rose: 0, lotus: 0 };
+
+        // -------------------------------------------------------------------------
+        // 2. WEB AUDIO API: TẠO GIAI ĐIỆU PIANO KHÔNG LỜI DU DƯƠNG
+        // -------------------------------------------------------------------------
+        let audioCtx = null;
+        let isMusicPlaying = false;
+        let musicTimer = null;
+        let noteIndex = 0;
+
+        // Giai điệu nhẹ nhàng mang âm hưởng hoài niệm, tri ân (C major / A minor pentatonic)
+        const melodyNotes = [
+            { freq: 261.63, dur: 1.2 }, // C4
+            { freq: 329.63, dur: 1.2 }, // E4
+            { freq: 392.00, dur: 1.4 }, // G4
+            { freq: 440.00, dur: 1.6 }, // A4
+            { freq: 392.00, dur: 1.2 }, // G4
+            { freq: 329.63, dur: 1.2 }, // E4
+            { freq: 293.66, dur: 1.8 }, // D4
+            
+            { freq: 246.94, dur: 1.2 }, // B3
+            { freq: 293.66, dur: 1.2 }, // D4
+            { freq: 392.00, dur: 1.4 }, // G4
+            { freq: 493.88, dur: 1.6 }, // B4
+            { freq: 440.00, dur: 1.2 }, // A4
+            { freq: 392.00, dur: 1.2 }, // G4
+            { freq: 329.63, dur: 2.0 }, // E4
+
+            { freq: 220.00, dur: 1.2 }, // A3
+            { freq: 261.63, dur: 1.2 }, // C4
+            { freq: 329.63, dur: 1.4 }, // E4
+            { freq: 523.25, dur: 1.6 }, // C5
+            { freq: 493.88, dur: 1.2 }, // B4
+            { freq: 440.00, dur: 1.2 }, // A4
+            { freq: 392.00, dur: 2.0 }, // G4
+
+            { freq: 349.23, dur: 1.2 }, // F4
+            { freq: 329.63, dur: 1.2 }, // E4
+            { freq: 293.66, dur: 1.4 }, // D4
+            { freq: 329.63, dur: 1.4 }, // E4
+            { freq: 261.63, dur: 2.4 }  // C4
+        ];
+
+        function playPianoNote(freq, duration) {
+            if (!audioCtx || !isMusicPlaying) return;
+            try {
+                const now = audioCtx.currentTime;
+                
+                // Tạo âm sắc ấm áp giống đàn Piano điện/cơ bằng cách kết hợp 2 sóng hài
+                const osc1 = audioCtx.createOscillator();
+                const osc2 = audioCtx.createOscillator();
+                const gainNode = audioCtx.createGain();
+
+                osc1.type = 'sine';
+                osc1.frequency.setValueAtTime(freq, now);
+
+                osc2.type = 'triangle';
+                osc2.frequency.setValueAtTime(freq * 2, now); // Bậc 8 trên nhẹ
+
+                const subGain = audioCtx.createGain();
+                subGain.gain.setValueAtTime(0.08, now); // Harmonics rất nhỏ tạo độ ấm
+
+                // Đường bao âm lượng (ADSR) mềm mại
+                gainNode.gain.setValueAtTime(0.0001, now);
+                gainNode.gain.exponentialRampToValueAtTime(0.11, now + 0.06);
+                gainNode.gain.exponentialRampToValueAtTime(0.0001, now + duration + 0.8);
+
+                osc1.connect(gainNode);
+                osc2.connect(subGain);
+                subGain.connect(gainNode);
+                gainNode.connect(audioCtx.destination);
+
+                osc1.start(now);
+                osc2.start(now);
+                osc1.stop(now + duration + 0.9);
+                osc2.stop(now + duration + 0.9);
+            } catch (e) {
+                console.warn("Audio playback skipped:", e);
+            }
+        }
+
+        function scheduleNextNote() {
+            if (!isMusicPlaying) return;
+            const current = melodyNotes[noteIndex];
+            playPianoNote(current.freq, current.dur);
+            noteIndex = (noteIndex + 1) % melodyNotes.length;
+            musicTimer = setTimeout(scheduleNextNote, current.dur * 650);
+        }
+
+        function startAudio() {
+            try {
+                if (!audioCtx) {
+                    const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+                    audioCtx = new AudioContextClass();
+                }
+                if (audioCtx.state === 'suspended') {
+                    audioCtx.resume();
+                }
+                if (!isMusicPlaying) {
+                    isMusicPlaying = true;
+                    updateMusicUI();
+                    scheduleNextNote();
+                }
+            } catch (e) {
+                console.warn("Web Audio API không khả dụng:", e);
+            }
+        }
+
+        function stopAudio() {
+            isMusicPlaying = false;
+            if (musicTimer) {
+                clearTimeout(musicTimer);
+                musicTimer = null;
+            }
+            updateMusicUI();
+        }
+
+        function toggleAudio() {
+            if (isMusicPlaying) {
+                stopAudio();
+                showToast("Đã tắt nhạc nền");
+            } else {
+                startAudio();
+                showToast("Đang phát giai điệu Piano tri ân");
+            }
+        }
+
+        function updateMusicUI() {
+            const onIcon = document.getElementById('music-icon-on');
+            const offIcon = document.getElementById('music-icon-off');
+            if (isMusicPlaying) {
+                onIcon.classList.remove('hidden');
+                offIcon.classList.add('hidden');
+            } else {
+                onIcon.classList.add('hidden');
+                offIcon.classList.remove('hidden');
+            }
+        }
+
+        // -------------------------------------------------------------------------
+        // 3. HIỆU ỨNG MỞ PHONG THƯ & XUẤT HIỆN NỘI DUNG
+        // -------------------------------------------------------------------------
+        function openInvitation() {
+            const envelopeBox = document.getElementById('envelope-box');
+            const overlay = document.getElementById('envelope-overlay');
+
+            // Bắt đầu hiệu ứng lật nắp phong thư
+            envelopeBox.classList.add('envelope-opening');
+            
+            // Phát nhạc nền nhẹ nhàng khi mở thiệp
+            startAudio();
+
+            // Ẩn lớp phủ phong thư sau khi nắp mở
+            setTimeout(() => {
+                overlay.classList.add('opened');
+                triggerRevealAnimations();
+            }, 650);
+        }
+
+        function replayEnvelope() {
+            const envelopeBox = document.getElementById('envelope-box');
+            const overlay = document.getElementById('envelope-overlay');
+            envelopeBox.classList.remove('envelope-opening');
+            overlay.classList.remove('opened');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function triggerRevealAnimations() {
+            const sections = document.querySelectorAll('.reveal-section');
+            sections.forEach((sec, idx) => {
+                setTimeout(() => {
+                    sec.classList.add('visible');
+                }, idx * 180);
+            });
+        }
+
+        // -------------------------------------------------------------------------
+        // 4. TƯƠNG TÁC ĐÓA HOA TRI ÂN
+        // -------------------------------------------------------------------------
+        function selectFlower(type) {
+            flowerCounts[type]++;
+            document.getElementById(`count-${type}`).textContent = flowerCounts[type];
+
+            const msgBox = document.getElementById('flower-message-box');
+            const titleEl = document.getElementById('flower-message-title');
+            const descEl = document.getElementById('flower-message-desc');
+
+            titleEl.textContent = flowerData[type].title;
+            descEl.textContent = flowerData[type].desc;
+
+            // Hiệu ứng nhấn nhẹ hộp thông điệp
+            msgBox.classList.add('scale-[1.01]');
+            setTimeout(() => msgBox.classList.remove('scale-[1.01]'), 200);
+
+            // Tạo hiệu ứng bùng nổ cánh hoa trên canvas
+            burstPetals(type);
+        }
+
+        // -------------------------------------------------------------------------
+        // 5. CÁ NHÂN HÓA LỜI CHÚC & SỔ LƯU BÚT
+        // -------------------------------------------------------------------------
+        function applyPresetMessage(index) {
+            const textarea = document.getElementById('input-message');
+            textarea.value = presetMessages[index];
+
+            // Cập nhật trạng thái nút chọn mẫu
+            const buttons = document.querySelectorAll('.preset-btn');
+            buttons.forEach((btn, i) => {
+                if (i === index) {
+                    btn.className = "preset-btn px-3 py-1.5 rounded-full text-xs font-medium bg-burgundy text-parchment border border-burgundy transition";
+                } else {
+                    btn.className = "preset-btn px-3 py-1.5 rounded-full text-xs font-medium bg-white text-navy border border-gold/50 hover:border-burgundy transition";
+                }
+            });
+        }
+
+        function updateCard(event) {
+            event.preventDefault();
+            const honorific = document.getElementById('input-honorific').value.trim();
+            const teacherName = document.getElementById('input-teacher-name').value.trim();
+            const message = document.getElementById('input-message').value.trim();
+            const sender = document.getElementById('input-sender').value.trim() || "Học trò của Thầy Cô";
+
+            // Tạo câu xưng hô trang trọng
+            let salutation = `Kính gửi ${honorific}`;
+            if (teacherName) {
+                salutation += ` ${teacherName}`;
+            }
+            salutation += ` đáng kính,`;
+
+            document.getElementById('card-salutation').textContent = salutation;
+            document.getElementById('card-message').textContent = message;
+            document.getElementById('card-sender').textContent = sender;
+
+            // Cuộn mượt lên phần thiệp để xem kết quả
+            document.getElementById('printable-card').scrollIntoView({ behavior: 'smooth', block: 'start' });
+            showToast("Đã cập nhật lời chúc lên tấm thiệp!");
+            burstPetals('sunflower');
+        }
+
+        function copyCardText() {
+            const salutation = document.getElementById('card-salutation').textContent;
+            const message = document.getElementById('card-message').textContent;
+            const sender = document.getElementById('card-sender').textContent;
+
+            const fullText = `🌸 CHÚC MỪNG NGÀY NHÀ GIÁO VIỆT NAM 20/11 🌸\n\n${salutation}\n${message}\n\nKính thư,\n${sender}`;
+
+            // Sử dụng textarea tạm & execCommand('copy') để đảm bảo tương thích mọi môi trường
+            const tempInput = document.createElement('textarea');
+            tempInput.value = fullText;
+            document.body.appendChild(tempInput);
+            tempInput.select();
+            try {
+                document.execCommand('copy');
+                showToast("Đã sao chép lời chúc vào bộ nhớ tạm!");
+            } catch (err) {
+                showToast("Không thể sao chép tự động, vui lòng bôi đen văn bản.");
+            }
+            document.body.removeChild(tempInput);
+        }
+
+        function toggleKeepsakeMode() {
+            const body = document.body;
+            const exitBar = document.getElementById('exit-keepsake-bar');
+            body.classList.toggle('keepsake-mode');
+
+            if (body.classList.contains('keepsake-mode')) {
+                exitBar.classList.remove('hidden');
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+                showToast("Đã bật chế độ chụp ảnh lưu niệm toàn cảnh");
+            } else {
+                exitBar.classList.add('hidden');
+            }
+        }
+
+        // Hệ thống thông báo Toast
+        let toastTimeout = null;
+        function showToast(msg) {
+            const toastBox = document.getElementById('toast-box');
+            const toastMsg = document.getElementById('toast-message');
+            toastMsg.textContent = msg;
+
+            toastBox.classList.remove('opacity-0', 'translate-y-4');
+            toastBox.classList.add('opacity-100', 'translate-y-0');
+
+            if (toastTimeout) clearTimeout(toastTimeout);
+            toastTimeout = setTimeout(() => {
+                toastBox.classList.add('opacity-0', 'translate-y-4');
+                toastBox.classList.remove('opacity-100', 'translate-y-0');
+            }, 3000);
+        }
+
+        // -------------------------------------------------------------------------
+        // 6. CANVAS HIỆU ỨNG CÁNH HOA RƠI & ÁNH SÁNG LUNG LINH
+        // -------------------------------------------------------------------------
+        const canvas = document.getElementById('petals-canvas');
+        const ctx = canvas.getContext('2d');
+        let particles = [];
+
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
+
+        const petalColors = [
+            'rgba(229, 196, 102, 0.55)', // Vàng ánh kim
+            'rgba(245, 184, 65, 0.45)',  // Vàng hướng dương
+            'rgba(185, 65, 80, 0.35)',   // Đỏ phượng vĩ dịu
+            'rgba(244, 143, 177, 0.35)'  // Hồng sen nhạt
+        ];
+
+        class Petal {
+            constructor(x, y, isBurst = false) {
+                this.x = x !== undefined ? x : Math.random() * canvas.width;
+                this.y = y !== undefined ? y : Math.random() * canvas.height - canvas.height;
+                this.size = Math.random() * 6 + 4;
+                this.speedY = isBurst ? (Math.random() * 2 + 1) : (Math.random() * 0.9 + 0.35);
+                this.speedX = isBurst ? (Math.random() * 4 - 2) : (Math.random() * 0.8 - 0.4);
+                this.angle = Math.random() * Math.PI * 2;
+                this.spin = (Math.random() - 0.5) * 0.03;
+                this.color = petalColors[Math.floor(Math.random() * petalColors.length)];
+                this.isSparkle = Math.random() > 0.72;
+            }
+
+            update() {
+                this.y += this.speedY;
+                this.x += this.speedX + Math.sin(this.angle) * 0.35;
+                this.angle += this.spin;
+
+                if (this.y > canvas.height + 20) {
+                    this.y = -15;
+                    this.x = Math.random() * canvas.width;
+                }
+                if (this.x > canvas.width + 20) this.x = -15;
+                if (this.x < -20) this.x = canvas.width + 15;
+            }
+
+            draw() {
+                ctx.save();
+                ctx.translate(this.x, this.y);
+                ctx.rotate(this.angle);
+
+                if (this.isSparkle) {
+                    // Hạt ánh sáng vàng lung linh
+                    ctx.beginPath();
+                    ctx.arc(0, 0, this.size * 0.35, 0, Math.PI * 2);
+                    ctx.fillStyle = 'rgba(212, 175, 55, 0.6)';
+                    ctx.fill();
+                } else {
+                    // Cánh hoa mềm mại
+                    ctx.beginPath();
+                    ctx.ellipse(0, 0, this.size, this.size * 0.55, 0, 0, Math.PI * 2);
+                    ctx.fillStyle = this.color;
+                    ctx.fill();
+                }
+
+                ctx.restore();
+            }
+        }
+
+        function initParticles() {
+            particles = [];
+            const count = window.innerWidth < 640 ? 28 : 48;
+            for (let i = 0; i < count; i++) {
+                particles.push(new Petal(Math.random() * canvas.width, Math.random() * canvas.height));
+            }
+        }
+
+        function burstPetals(flowerType) {
+            const centerX = canvas.width / 2;
+            const centerY = canvas.height / 2;
+            for (let i = 0; i < 16; i++) {
+                const p = new Petal(centerX + (Math.random() * 160 - 80), centerY + (Math.random() * 80 - 40), true);
+                if (flowerType === 'lotus') p.color = 'rgba(244, 114, 182, 0.6)';
+                if (flowerType === 'sunflower') p.color = 'rgba(234, 179, 8, 0.65)';
+                if (flowerType === 'rose') p.color = 'rgba(250, 204, 21, 0.65)';
+                particles.push(p);
+            }
+            // Giữ tổng số hạt ổn định để mượt mà trên mọi thiết bị
+            if (particles.length > 90) {
+                particles.splice(0, particles.length - 90);
+            }
+        }
+
+        function animatePetals() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            for (let i = 0; i < particles.length; i++) {
+                particles[i].update();
+                particles[i].draw();
+            }
+            requestAnimationFrame(animatePetals);
+        }
+
+        window.onload = function () {
+            initParticles();
+            animatePetals();
+        };
+    </script>
+</body>
+</html>

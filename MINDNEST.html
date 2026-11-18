@@ -1,0 +1,549 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#1f4d3d">
+  <meta name="description" content="MINDNEST hỗ trợ sinh viên và người trẻ ghi nhận cảm xúc, tự phản tư và tìm hướng chăm sóc bản thân.">
+  <title>MINDNEST — Nhận diện cảm xúc, thấu hiểu bản thân</title>
+  <style>
+    :root{
+      --bg:#f4f2ea;--paper:#fffefa;--ink:#19392e;--muted:#62736a;
+      --green:#1f4d3d;--green2:#2c6650;--sage:#e6ece4;--line:#dce2d8;
+      --gold:#a7772d;--shadow:0 12px 32px rgba(25,57,46,.07);--radius:24px;
+    }
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{margin:0;background:radial-gradient(ellipse at 95% 0%,#e8ebdf 0,transparent 36%),var(--bg);color:var(--ink);font-family:Inter,"Be Vietnam Pro",Arial,sans-serif;line-height:1.6}
+    button,input,select,textarea{font:inherit}
+    button{cursor:pointer}
+    a{color:inherit;text-decoration:none}
+    .container{width:min(1120px,calc(100% - 40px));margin:auto}
+    .topbar{position:sticky;top:0;z-index:20;background:rgba(244,242,234,.92);backdrop-filter:blur(14px);border-bottom:1px solid var(--line)}
+    .top-inner{min-height:66px;display:flex;align-items:center;justify-content:space-between;gap:16px}
+    .brand{display:flex;align-items:center;gap:10px;font-weight:900;letter-spacing:-.03em;font-size:18px;white-space:nowrap}
+    .brand-mark{width:34px;height:34px;border-radius:12px;background:var(--green);color:white;display:grid;place-items:center;font-weight:900}
+    .nav{display:flex;align-items:center;gap:4px}
+    .nav button,.mobile-nav button{border:0;background:transparent;color:#53645b;border-radius:999px;padding:9px 13px;font-weight:700}
+    .nav button:hover,.mobile-nav button:hover{background:var(--sage);color:var(--ink)}
+    .nav button.active,.mobile-nav button.active{background:var(--green);color:white}
+    .top-actions{display:flex;align-items:center;gap:8px}
+    .lang{display:flex;border:1px solid var(--line);border-radius:999px;padding:3px;gap:2px}
+    .lang button{border:0;background:transparent;border-radius:999px;padding:5px 8px;font-size:12px;font-weight:800;color:var(--muted)}
+    .lang button.active{background:var(--green);color:white}
+    .mobile-nav{display:none;gap:5px;overflow:auto;padding:0 0 10px}
+    .mobile-nav button{white-space:nowrap;border:1px solid var(--line);padding:7px 12px;font-size:13px}
+    main{padding:58px 0 76px;min-height:72vh}
+    .page{display:none;animation:fade .24s ease}
+    .page.active{display:block}
+    @keyframes fade{from{opacity:.3;transform:translateY(5px)}to{opacity:1;transform:none}}
+    .eyebrow{font-size:12px;text-transform:uppercase;letter-spacing:.18em;font-weight:900;color:#71867a}
+    h1,h2,h3,p{margin-top:0}
+    h1{font-size:clamp(38px,6vw,64px);line-height:1.08;letter-spacing:-.055em;margin:14px 0 20px;max-width:760px}
+    h2{font-size:clamp(27px,4vw,36px);line-height:1.16;letter-spacing:-.035em;margin-bottom:12px}
+    h3{line-height:1.25;letter-spacing:-.02em}
+    .lead{font-size:18px;line-height:1.7;color:#52645a;max-width:690px}
+    .muted{color:var(--muted)}
+    .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border:1px solid var(--green);border-radius:999px;padding:12px 19px;min-height:46px;background:var(--green);color:white;font-weight:800;transition:.18s}
+    .btn:hover{background:var(--green2);transform:translateY(-1px)}
+    .btn.secondary{background:transparent;color:var(--green);border-color:#b9c8bc}
+    .btn.secondary:hover{background:var(--sage)}
+    .btn.small{min-height:36px;padding:7px 12px;font-size:13px}
+    .hero-grid{display:grid;grid-template-columns:1.5fr .8fr;align-items:center;gap:52px}
+    .hero-actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:26px}
+    .today-card{background:var(--green);color:#fff;border-radius:28px;padding:26px 28px;box-shadow:var(--shadow)}
+    .today-card .muted{color:#d4e2d8}
+    .today-card ol{padding-left:22px;margin:16px 0 0}
+    .today-card li{padding:6px 0}
+    .grid{display:grid;gap:16px}
+    .features{grid-template-columns:repeat(3,1fr);margin-top:54px}
+    .panel{background:var(--paper);border:1px solid var(--line);border-radius:var(--radius);padding:25px;box-shadow:var(--shadow)}
+    .feature{display:block;min-height:210px;transition:.2s}
+    .feature:hover{transform:translateY(-3px);border-color:#b8c8ba}
+    .feature .kicker{color:var(--gold);font-size:12px;font-weight:900;letter-spacing:.12em;text-transform:uppercase}
+    .feature h3{font-size:21px;margin:14px 0 8px}
+    .feature p{font-size:14px;color:var(--muted);margin-bottom:0}
+    .two-col{grid-template-columns:1fr 1fr;margin-top:24px}
+    .accent-panel{background:#dfe8dc}
+    .roadmap{grid-template-columns:repeat(2,1fr);margin-top:18px}
+    .road-item{display:flex;gap:15px;padding:17px 19px}
+    .road-no{font-weight:900;color:var(--gold);font-size:18px}
+    .page-head{margin-bottom:28px}
+    .page-head h1{font-size:clamp(36px,5vw,54px);margin-bottom:12px}
+    .page-head p{max-width:720px;color:var(--muted)}
+    .content-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px;align-items:start}
+    .field{display:block;width:100%;border:1px solid var(--line);border-radius:14px;background:#fff;padding:12px 14px;color:var(--ink);outline:none}
+    .field:focus{border-color:var(--green2);box-shadow:0 0 0 3px rgba(44,102,80,.12)}
+    textarea.field{resize:vertical;min-height:100px}
+    label{display:block;font-size:14px;font-weight:800;margin:17px 0 7px}
+    .emotion-list,.topic-list{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+    .chip{border:1px solid var(--line);border-radius:999px;padding:9px 13px;background:#fff;color:var(--ink);font-size:14px;font-weight:750}
+    .chip.active{background:var(--green);color:#fff;border-color:var(--green)}
+    input[type=range]{width:100%;accent-color:var(--green);margin-top:14px}
+    .bar-row{margin:17px 0}
+    .bar-label{display:flex;justify-content:space-between;font-size:14px}
+    .bar-track{height:8px;background:#edf0e9;border-radius:99px;overflow:hidden;margin-top:7px}
+    .bar-fill{height:100%;background:var(--green2);border-radius:99px;transition:width .2s}
+    .entry{padding:17px 19px;margin-top:12px}
+    .entry-top{display:flex;align-items:flex-start;justify-content:space-between;gap:12px}
+    .entry p{margin:4px 0}
+    .delete{border:0;background:transparent;color:#9a5b4f;font-size:13px;font-weight:800;padding:5px}
+    .empty{padding:18px;color:var(--muted);border:1px dashed #cbd5ca;border-radius:16px}
+    .prompt-list{display:grid;gap:14px}
+    .prompt-number{color:var(--gold);font-weight:900;font-size:12px;letter-spacing:.12em}
+    .prompt-card h3{font-size:20px;margin:7px 0}
+    .prompt-card p{font-size:14px;color:var(--muted);margin-bottom:0}
+    .steps{list-style:none;padding:0;margin:18px 0 0;display:grid;gap:12px}
+    .step{display:flex;gap:16px;align-items:flex-start}
+    .step-num{font-size:22px;font-weight:900;color:var(--gold);line-height:1.3}
+    .notice{border-left:4px solid var(--gold);background:#f7f0df;padding:14px 16px;border-radius:0 14px 14px 0;color:#5e5139;font-size:14px;margin-top:18px}
+    .model-grid{grid-template-columns:repeat(3,1fr);margin-top:24px}
+    .model-card h3{font-size:28px;margin-bottom:8px}
+    .form-panel{max-width:660px;margin-top:24px}
+    .status{font-size:13px;color:var(--green2);font-weight:800;margin:12px 0 0}
+    footer{border-top:1px solid var(--line);padding:28px 0 34px;color:var(--muted);font-size:13px}
+    footer strong{color:var(--ink)}
+    .footer-row{display:flex;justify-content:space-between;gap:24px;flex-wrap:wrap}
+    .small-note{font-size:12px;color:var(--muted)}
+    .toast{position:fixed;bottom:22px;left:50%;transform:translate(-50%,20px);opacity:0;pointer-events:none;background:#19392e;color:white;padding:12px 18px;border-radius:999px;box-shadow:var(--shadow);z-index:50;transition:.2s;font-size:14px}
+    .toast.show{opacity:1;transform:translate(-50%,0)}
+    @media(max-width:800px){
+      .nav{display:none}.mobile-nav{display:flex}.top-inner{min-height:60px}
+      .hero-grid,.content-grid,.two-col{grid-template-columns:1fr}
+      .hero-grid{gap:30px}.features{grid-template-columns:1fr;gap:12px;margin-top:38px}
+      .feature{min-height:auto}.model-grid{grid-template-columns:1fr}.roadmap{grid-template-columns:1fr}
+      main{padding-top:38px}.today-card{max-width:none}
+    }
+    @media(max-width:480px){
+      .container{width:min(100% - 28px,1120px)}
+      .top-actions .lang{display:none}
+      .panel{padding:20px;border-radius:20px}
+      .lead{font-size:16px}
+      .hero-actions{flex-direction:column;align-items:stretch}
+      .hero-actions .btn{width:100%}
+      .entry-top{gap:4px}
+    }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="container top-inner">
+      <a class="brand" href="#home" aria-label="MINDNEST trang chủ">
+        <span class="brand-mark">M</span><span>MINDNEST</span>
+      </a>
+      <nav class="nav" aria-label="Điều hướng chính">
+        <button class="active" data-page="home">Tổng quan</button>
+        <button data-page="moodmap">MoodMap</button>
+        <button data-page="untangle">Untangle</button>
+        <button data-page="guide">Trợ lý</button>
+        <button data-page="campus">Campus</button>
+      </nav>
+      <div class="top-actions">
+        <button class="btn small" data-page="moodmap">Ghi cảm xúc</button>
+      </div>
+    </div>
+    <nav class="container mobile-nav" aria-label="Điều hướng trên điện thoại">
+      <button class="active" data-page="home">Tổng quan</button>
+      <button data-page="moodmap">MoodMap</button>
+      <button data-page="untangle">Untangle</button>
+      <button data-page="guide">Trợ lý</button>
+      <button data-page="campus">Campus</button>
+    </nav>
+  </header>
+
+  <main class="container">
+    <!-- TRANG CHỦ -->
+    <section class="page active" id="home">
+      <div class="hero-grid">
+        <div>
+          <p class="eyebrow">Nền tảng cho sinh viên &amp; người trẻ</p>
+          <h1>Nhận diện cảm xúc. Thấu hiểu bản thân. Tìm bước đi vừa sức.</h1>
+          <p class="lead">MINDNEST hỗ trợ các vấn đề trong học tập, công việc và cuộc sống bằng công cụ tự chăm sóc — thích ứng văn hóa và môi trường học, không chỉ dịch giao diện.</p>
+          <div class="hero-actions">
+            <button class="btn" data-page="moodmap">Mở MoodMap <span aria-hidden="true">→</span></button>
+            <button class="btn secondary" data-page="campus">Dành cho nhà trường</button>
+          </div>
+        </div>
+        <aside class="today-card">
+          <p class="muted" style="margin:0">Hôm nay bạn có thể</p>
+          <ol>
+            <li>Đặt tên cảm xúc đang có, thay vì cố “ổn” ngay.</li>
+            <li>Viết một sự kiện cụ thể, không phán xét bản thân.</li>
+            <li>Chọn một việc nhỏ dưới 10 phút.</li>
+          </ol>
+        </aside>
+      </div>
+
+      <div class="grid features">
+        <button class="panel feature" data-page="moodmap" style="text-align:left">
+          <span class="kicker">MoodMap</span>
+          <h3>Ghi nhận và nhìn xu hướng cảm xúc</h3>
+          <p>Chọn cảm xúc, mức độ và bối cảnh học tập hay công việc. Nhật ký lưu trên thiết bị này để bạn nhìn thấy nhịp cảm xúc của mình.</p>
+        </button>
+        <button class="panel feature" data-page="untangle" style="text-align:left">
+          <span class="kicker">Untangle</span>
+          <h3>Gỡ rối vấn đề từ nhiều góc nhìn</h3>
+          <p>Câu hỏi gợi mở và bài tập tự phản tư giúp tách sự kiện, cảm xúc và bước tiếp theo — không kết luận hộ bạn.</p>
+        </button>
+        <button class="panel feature" data-page="guide" style="text-align:left">
+          <span class="kicker">Trợ lý tự chăm sóc</span>
+          <h3>Định hướng hoạt động ngắn, cụ thể</h3>
+          <p>Gợi ý việc nhỏ có thể làm ngay: nghỉ ngắn, viết ra điều đang kẹt, hoặc tìm kênh hỗ trợ chính thức của trường.</p>
+        </button>
+      </div>
+
+      <div class="grid two-col">
+        <article class="panel">
+          <h2>Viết cho đời sống sinh viên thật</h2>
+          <p class="muted">Deadline, áp lực gia đình, làm thêm, bạn cùng phòng. Mô hình B2C cho người dùng và B2B cho trường — nội dung thích ứng văn hóa.</p>
+        </article>
+        <article class="panel accent-panel">
+          <p class="eyebrow">Campus</p>
+          <h2>Ngay trong ứng dụng của trường</h2>
+          <p>Sinh viên có thể tiếp cận công cụ cảm xúc bên cạnh chương trình hỗ trợ và kênh tư vấn chính thức. Không thay thế phòng tâm lý.</p>
+          <button class="btn" data-page="campus">Xem mô hình <span aria-hidden="true">→</span></button>
+        </article>
+      </div>
+
+      <section style="margin-top:48px">
+        <p class="eyebrow">Lộ trình triển khai</p>
+        <h2>Các bước phát triển MINDNEST</h2>
+        <div class="grid roadmap">
+          <div class="panel road-item"><span class="road-no">01</span><div><strong>Tên miền</strong><p class="muted" style="margin:3px 0 0">Tên miền .vn và .com để giữ thương hiệu.</p></div></div>
+          <div class="panel road-item"><span class="road-no">02</span><div><strong>Máy chủ</strong><p class="muted" style="margin:3px 0 0">Server và cơ sở dữ liệu cho giai đoạn đầu.</p></div></div>
+          <div class="panel road-item"><span class="road-no">03</span><div><strong>SSL</strong><p class="muted" style="margin:3px 0 0">HTTPS cho nhật ký cảm xúc.</p></div></div>
+          <div class="panel road-item"><span class="road-no">04</span><div><strong>MVP</strong><p class="muted" style="margin:3px 0 0">Web app, rồi Zalo Mini App cho MoodMap và Untangle.</p></div></div>
+          <div class="panel road-item"><span class="road-no">05</span><div><strong>Pháp lý</strong><p class="muted" style="margin:3px 0 0">Đăng ký kinh doanh, thông báo website, bản quyền.</p></div></div>
+          <div class="panel road-item"><span class="road-no">06</span><div><strong>AI có rà soát</strong><p class="muted" style="margin:3px 0 0">API thử nghiệm, nội dung được cố vấn tâm lý rà soát.</p></div></div>
+          <div class="panel road-item"><span class="road-no">07</span><div><strong>Vận hành</strong><p class="muted" style="margin:3px 0 0">Sao lưu, bảo trì, thanh toán và email OTP khi mở rộng.</p></div></div>
+        </div>
+      </section>
+    </section>
+
+    <!-- MOODMAP -->
+    <section class="page" id="moodmap">
+      <div class="page-head">
+        <p class="eyebrow">MoodMap</p>
+        <h1>Bạn đang thấy thế nào?</h1>
+        <p>Chọn cảm xúc, mức độ và bối cảnh để ghi nhận trạng thái hiện tại. Nhật ký chỉ lưu trên trình duyệt này, không gửi lên máy chủ.</p>
+      </div>
+      <div class="content-grid">
+        <section class="panel">
+          <label style="margin-top:0">Bạn đang cảm thấy</label>
+          <div class="emotion-list" id="emotionChoices">
+            <button type="button" class="chip active" data-emotion="binh-yen">Bình yên</button>
+            <button type="button" class="chip" data-emotion="vui">Vui</button>
+            <button type="button" class="chip" data-emotion="met">Mệt</button>
+            <button type="button" class="chip" data-emotion="lo">Lo lắng</button>
+            <button type="button" class="chip" data-emotion="buon">Buồn</button>
+            <button type="button" class="chip" data-emotion="buc">Bức bối</button>
+            <button type="button" class="chip" data-emotion="trong">Trống rỗng</button>
+          </div>
+          <label for="intensity">Mức độ: <strong id="intensityValue">3/5</strong></label>
+          <input id="intensity" type="range" min="1" max="5" value="3">
+          <label for="context">Bối cảnh</label>
+          <select class="field" id="context">
+            <option value="0">Học tập</option><option value="1">Công việc</option><option value="2">Gia đình</option><option value="3">Bạn bè</option><option value="4">Sức khỏe</option><option value="5">Khác</option>
+          </select>
+          <label for="moodNote">Một câu về chuyện đang xảy ra</label>
+          <textarea class="field" id="moodNote" maxlength="280" placeholder="Ví dụ: Sắp nộp bài nhưng mình vẫn chưa viết được đoạn mở đầu."></textarea>
+          <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:16px">
+            <button class="btn" id="saveMood">Lưu vào nhật ký</button>
+            <button class="btn secondary" id="clearMoodForm" type="button">Làm mới</button>
+          </div>
+          <p class="small-note" style="margin:12px 0 0">Bạn có thể ghi nhận cảm xúc mà không cần giải thích hay phán xét nó.</p>
+        </section>
+        <section class="panel">
+          <h2 style="font-size:24px">Xu hướng đã ghi</h2>
+          <p class="muted" style="font-size:14px">Số lần bạn đã ghi nhận từng cảm xúc.</p>
+          <div id="moodStats"></div>
+        </section>
+      </div>
+      <section style="margin-top:26px">
+        <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap">
+          <h2 style="font-size:25px;margin:0">Nhật ký gần đây</h2>
+          <button class="delete" id="clearMoodHistory" type="button">Xóa toàn bộ nhật ký</button>
+        </div>
+        <div id="moodEntries" style="margin-top:12px"></div>
+      </section>
+    </section>
+
+    <!-- UNTANGLE -->
+    <section class="page" id="untangle">
+      <div class="page-head">
+        <p class="eyebrow">Untangle</p>
+        <h1>Gỡ một việc, từng chút một.</h1>
+        <p>Không có câu trả lời đúng. Hãy viết theo cách của bạn, không cần câu chữ hoàn hảo. Nội dung được lưu trên thiết bị này.</p>
+      </div>
+      <div class="prompt-list">
+        <article class="panel prompt-card">
+          <span class="prompt-number">01 / SỰ KIỆN</span>
+          <h3>Chuyện cụ thể vừa xảy ra là gì?</h3>
+          <p>Một sự kiện, không phải đánh giá về bản thân.</p>
+          <textarea class="field reflection" data-index="0" rows="3" placeholder="Điều gì đã xảy ra?"></textarea>
+        </article>
+        <article class="panel prompt-card">
+          <span class="prompt-number">02 / CẢM XÚC</span>
+          <h3>Cảm xúc nào mạnh nhất?</h3>
+          <p>Cảm xúc là tín hiệu, chưa phải kết luận.</p>
+          <textarea class="field reflection" data-index="1" rows="3" placeholder="Bạn đang cảm thấy thế nào?"></textarea>
+        </article>
+        <article class="panel prompt-card">
+          <span class="prompt-number">03 / GÓC NHÌN</span>
+          <h3>Người khác có thể đang thấy gì?</h3>
+          <p>Tách điều mình biết khỏi điều mình đoán.</p>
+          <textarea class="field reflection" data-index="2" rows="3" placeholder="Có góc nhìn nào khác mà bạn chưa nghĩ tới?"></textarea>
+        </article>
+        <article class="panel prompt-card">
+          <span class="prompt-number">04 / BƯỚC TIẾP</span>
+          <h3>Bước nhỏ trong 24 giờ tới?</h3>
+          <p>Một đoạn ngắn thường dễ hơn mục tiêu “xong tất cả”.</p>
+          <textarea class="field reflection" data-index="3" rows="3" placeholder="Một việc nhỏ, cụ thể bạn có thể làm là gì?"></textarea>
+        </article>
+      </div>
+      <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-top:18px">
+        <button class="btn" id="saveReflection">Lưu bài phản tư</button>
+        <button class="btn secondary" id="clearReflection">Xóa nội dung</button>
+        <span class="status" id="reflectionStatus" aria-live="polite"></span>
+      </div>
+    </section>
+
+    <!-- GUIDE -->
+    <section class="page" id="guide">
+      <div class="page-head">
+        <p class="eyebrow">Trợ lý tự chăm sóc</p>
+        <h1>Một việc làm được ngay.</h1>
+        <p>Các bước gợi ý cố định để bạn bắt đầu từ điều nhỏ nhất. Đây không phải công cụ chẩn đoán và không thay thế chuyên gia.</p>
+      </div>
+      <div class="topic-list" id="guideTopics">
+        <button type="button" class="chip active" data-topic="0">Học tập</button>
+        <button type="button" class="chip" data-topic="1">Công việc</button>
+        <button type="button" class="chip" data-topic="2">Cảm xúc nặng</button>
+      </div>
+      <section class="panel" style="margin-top:18px">
+        <h2 id="guideTitle" style="font-size:25px">Khi việc học khiến bạn mắc kẹt</h2>
+        <ol class="steps" id="guideSteps"></ol>
+      </section>
+      <div class="notice"><strong>Khi cảm xúc trở nên quá nặng:</strong> Nếu bạn nghĩ đến việc làm hại bản thân, hãy liên hệ ngay với người thân/người bạn tin cậy hoặc cơ sở y tế gần nhất. MINDNEST không phải dịch vụ hỗ trợ khẩn cấp.</div>
+    </section>
+
+    <!-- CAMPUS -->
+    <section class="page" id="campus">
+      <div class="page-head">
+        <p class="eyebrow">Campus</p>
+        <h1>Đưa công cụ chăm sóc cảm xúc đến gần sinh viên hơn.</h1>
+        <p>Sinh viên có thể tiếp cận công cụ nhận diện cảm xúc cạnh chương trình hỗ trợ và kênh tư vấn chính thức. MINDNEST không thay thế phòng tâm lý hoặc dịch vụ chuyên môn.</p>
+      </div>
+      <div class="grid model-grid">
+        <article class="panel model-card"><h3>B2C</h3><p class="muted">Người dùng mở MoodMap, Untangle và trợ lý trực tiếp.</p></article>
+        <article class="panel model-card"><h3>B2B</h3><p class="muted">Trường đưa công cụ vào cổng thông tin hoặc mini app.</p></article>
+        <article class="panel model-card"><h3>Nội dung</h3><p class="muted">Viết theo vấn đề của từng nhóm, không chỉ dịch giao diện.</p></article>
+      </div>
+      <form class="panel form-panel" id="campusForm">
+        <h2 style="font-size:25px">Ghi nhu cầu hợp tác</h2>
+        <p class="muted" style="font-size:14px">Đây là bản demo. Ghi chú được lưu trên trình duyệt của bạn, không gửi đến nhà trường hoặc máy chủ.</p>
+        <label for="school">Tên trường hoặc tổ chức *</label>
+        <input class="field" id="school" required maxlength="120" placeholder="Ví dụ: Đại học Thủy lợi">
+        <label for="role">Vai trò / đơn vị</label>
+        <select class="field" id="role">
+          <option>Phòng công tác sinh viên</option>
+          <option>Trung tâm tư vấn</option>
+          <option>Đoàn — Hội</option>
+          <option>Khác</option>
+        </select>
+        <label for="campusNote">Bạn muốn tích hợp những gì?</label>
+        <textarea class="field" id="campusNote" rows="4" maxlength="1000" placeholder="Mô tả nhu cầu hoặc ý tưởng của bạn..."></textarea>
+        <button class="btn" type="submit" style="margin-top:16px">Lưu ghi chú</button>
+        <p class="status" id="campusStatus" aria-live="polite"></p>
+      </form>
+      <section style="margin-top:28px">
+        <h2 style="font-size:24px">Ghi chú đã lưu trên thiết bị</h2>
+        <div id="campusEntries"></div>
+      </section>
+    </section>
+  </main>
+
+  <footer>
+    <div class="container footer-row">
+      <div><strong>MINDNEST</strong><br>Nhận diện cảm xúc, thấu hiểu bản thân.</div>
+      <div style="max-width:580px">MINDNEST không thay thế tư vấn hoặc điều trị tâm lý chuyên nghiệp. Nếu bạn đang trong tình trạng khẩn cấp, hãy liên hệ người thân hoặc cơ sở y tế gần nhất.</div>
+    </div>
+  </footer>
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <script>
+    (() => {
+      const $ = (selector, root=document) => root.querySelector(selector);
+      const $$ = (selector, root=document) => [...root.querySelectorAll(selector)];
+      const KEYS = {
+        moods: "mindnest.moods.v1",
+        reflection: "mindnest.untangle.v1",
+        campus: "mindnest.campus.v1"
+      };
+      const emotions = [
+        {id:"binh-yen",label:"Bình yên"},{id:"vui",label:"Vui"},{id:"met",label:"Mệt"},
+        {id:"lo",label:"Lo lắng"},{id:"buon",label:"Buồn"},{id:"buc",label:"Bức bối"},{id:"trong",label:"Trống rỗng"}
+      ];
+      const contexts = ["Học tập","Công việc","Gia đình","Bạn bè","Sức khỏe","Khác"];
+      const guideData = [
+        {title:"Khi việc học khiến bạn mắc kẹt",steps:[
+          "Viết đúng một việc đang kẹt, bằng một câu.",
+          "Chia thành phần nhỏ nhất làm được trong 15 phút.",
+          "Đặt hẹn giờ. Hết giờ thì dừng.",
+          "Nếu quá tải nhiều ngày, nói với cố vấn học tập hoặc phòng công tác sinh viên."
+        ]},
+        {title:"Khi công việc tạo áp lực",steps:[
+          "Tách việc bắt buộc hôm nay và việc có thể dời.",
+          "Nhắn một câu làm rõ hạn nộp, thay vì đoán.",
+          "Nghỉ 5 phút trước khi trả lời tin gây căng.",
+          "Nếu môi trường gây tổn hại kéo dài, tìm người tin cậy hoặc kênh hỗ trợ chính thức."
+        ]},
+        {title:"Khi cảm xúc trở nên nặng nề",steps:[
+          "Đặt tên cảm xúc và mức độ từ 1 đến 5.",
+          "Uống nước, đổi tư thế, thở chậm một phút.",
+          "Nhắn một người: “Mình đang không ổn, ngồi cùng mình được không?”",
+          "Nếu bạn nghĩ đến việc làm hại bản thân, liên hệ ngay người thân hoặc cơ sở y tế. MINDNEST không xử lý khẩn cấp."
+        ]}
+      ];
+      const safeRead = (key, fallback) => {
+        try { const raw=localStorage.getItem(key); return raw ? JSON.parse(raw) : fallback; }
+        catch { return fallback; }
+      };
+      const safeWrite = (key, value) => {
+        try { localStorage.setItem(key, JSON.stringify(value)); return true; }
+        catch { showToast("Không thể lưu dữ liệu. Hãy kiểm tra dung lượng trình duyệt."); return false; }
+      };
+      function escapeHTML(value) {
+        return String(value ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+      }
+      let toastTimer;
+      function showToast(message) {
+        const toast=$("#toast"); toast.textContent=message; toast.classList.add("show");
+        clearTimeout(toastTimer); toastTimer=setTimeout(()=>toast.classList.remove("show"),2400);
+      }
+
+      // Điều hướng giữa các trang trong cùng một file HTML.
+      function showPage(id, updateHash=true) {
+        if (!$("#"+id)) id="home";
+        $$(".page").forEach(p=>p.classList.toggle("active",p.id===id));
+        $$("[data-page]").forEach(b=>b.classList.toggle("active",b.dataset.page===id));
+        if(updateHash) history.replaceState(null,"","#"+id);
+        window.scrollTo({top:0,behavior:"smooth"});
+      }
+      $$("[data-page]").forEach(button=>button.addEventListener("click",()=>showPage(button.dataset.page)));
+      window.addEventListener("hashchange",()=>showPage(location.hash.slice(1),false));
+      if(location.hash) showPage(location.hash.slice(1),false);
+
+      // MoodMap
+      let selectedEmotion="binh-yen";
+      const intensity=$("#intensity");
+      intensity.addEventListener("input",()=>$("#intensityValue").textContent=intensity.value+"/5");
+      $$("#emotionChoices [data-emotion]").forEach(button=>button.addEventListener("click",()=>{
+        selectedEmotion=button.dataset.emotion;
+        $$("#emotionChoices .chip").forEach(b=>b.classList.toggle("active",b===button));
+      }));
+      function getMoods(){const data=safeRead(KEYS.moods,[]);return Array.isArray(data)?data:[];}
+      function renderMoodStats(){
+        const moods=getMoods(), counts=Object.fromEntries(emotions.map(e=>[e.id,0]));
+        moods.forEach(m=>{if(counts[m.emotion]!==undefined)counts[m.emotion]++;});
+        const max=Math.max(1,...Object.values(counts));
+        $("#moodStats").innerHTML=emotions.map(e=>`
+          <div class="bar-row">
+            <div class="bar-label"><span>${e.label}</span><span class="muted">${counts[e.id]}</span></div>
+            <div class="bar-track"><div class="bar-fill" style="width:${counts[e.id]/max*100}%"></div></div>
+          </div>`).join("");
+      }
+      function renderMoodEntries(){
+        const moods=getMoods();
+        if(!moods.length){$("#moodEntries").innerHTML='<div class="empty">Chưa có mục nào. Hãy ghi nhận cảm xúc đầu tiên của bạn.</div>';return;}
+        $("#moodEntries").innerHTML=moods.map(m=>{
+          const label=emotions.find(e=>e.id===m.emotion)?.label||"Cảm xúc";
+          const context=contexts[Number(m.context)]||"Khác";
+          const date=m.at?new Date(m.at).toLocaleString("vi-VN"):"";
+          return `<article class="panel entry">
+            <div class="entry-top"><div><strong>${escapeHTML(label)} · ${Number(m.intensity)||1}/5 · ${escapeHTML(context)}</strong>
+            <p class="muted" style="font-size:12px">${escapeHTML(date)}</p></div>
+            <button class="delete" type="button" data-delete-mood="${escapeHTML(m.id)}">Xóa</button></div>
+            ${m.note?`<p>${escapeHTML(m.note)}</p>`:""}
+          </article>`;
+        }).join("");
+      }
+      function refreshMoods(){renderMoodStats();renderMoodEntries();}
+      $("#saveMood").addEventListener("click",()=>{
+        const all=getMoods();
+        const entry={id:(crypto.randomUUID?crypto.randomUUID():String(Date.now())+Math.random()),emotion:selectedEmotion,intensity:Number(intensity.value),context:$("#context").value,note:$("#moodNote").value.trim(),at:new Date().toISOString()};
+        all.unshift(entry);
+        if(safeWrite(KEYS.moods,all.slice(0,100))){$("#moodNote").value="";refreshMoods();showToast("Đã lưu cảm xúc vào nhật ký.");}
+      });
+      $("#clearMoodForm").addEventListener("click",()=>{
+        selectedEmotion="binh-yen";intensity.value=3;$("#intensityValue").textContent="3/5";$("#context").value="0";$("#moodNote").value="";
+        $$("#emotionChoices .chip").forEach((b,i)=>b.classList.toggle("active",i===0));
+      });
+      $("#moodEntries").addEventListener("click",e=>{
+        const button=e.target.closest("[data-delete-mood]");if(!button)return;
+        const next=getMoods().filter(m=>String(m.id)!==button.dataset.deleteMood);
+        safeWrite(KEYS.moods,next);refreshMoods();showToast("Đã xóa mục nhật ký.");
+      });
+      $("#clearMoodHistory").addEventListener("click",()=>{
+        if(!getMoods().length){showToast("Nhật ký đang trống.");return;}
+        if(confirm("Bạn có chắc muốn xóa toàn bộ nhật ký cảm xúc trên trình duyệt này?")){
+          safeWrite(KEYS.moods,[]);refreshMoods();showToast("Đã xóa toàn bộ nhật ký.");
+        }
+      });
+      refreshMoods();
+
+      // Untangle: khôi phục nội dung đã lưu, lưu và xóa phản tư.
+      const reflectionFields=$$(".reflection");
+      const savedReflection=safeRead(KEYS.reflection,null);
+      if(savedReflection && Array.isArray(savedReflection.answers)){
+        reflectionFields.forEach((field,i)=>field.value=savedReflection.answers[i]||"");
+      }
+      $("#saveReflection").addEventListener("click",()=>{
+        const answers=reflectionFields.map(field=>field.value.trim());
+        if(safeWrite(KEYS.reflection,{answers,at:new Date().toISOString()})){
+          $("#reflectionStatus").textContent="Đã lưu trên thiết bị này.";
+          showToast("Đã lưu bài phản tư.");
+        }
+      });
+      $("#clearReflection").addEventListener("click",()=>{
+        if(confirm("Xóa toàn bộ nội dung phản tư đang nhập?")){
+          reflectionFields.forEach(field=>field.value="");localStorage.removeItem(KEYS.reflection);
+          $("#reflectionStatus").textContent="Đã xóa nội dung.";showToast("Đã xóa bài phản tư.");
+        }
+      });
+
+      // Trợ lý: đổi chủ đề và render các bước tương ứng.
+      function renderGuide(index){
+        const data=guideData[index];
+        $("#guideTitle").textContent=data.title;
+        $("#guideSteps").innerHTML=data.steps.map((step,i)=>`<li class="panel step"><span class="step-num">0${i+1}</span><span>${escapeHTML(step)}</span></li>`).join("");
+        $$("#guideTopics [data-topic]").forEach(b=>b.classList.toggle("active",Number(b.dataset.topic)===index));
+      }
+      $$("#guideTopics [data-topic]").forEach(b=>b.addEventListener("click",()=>renderGuide(Number(b.dataset.topic))));
+      renderGuide(0);
+
+      // Campus: lưu và hiển thị ghi chú demo cục bộ.
+      function getCampus(){const data=safeRead(KEYS.campus,[]);return Array.isArray(data)?data:[];}
+      function renderCampus(){
+        const entries=getCampus();
+        if(!entries.length){$("#campusEntries").innerHTML='<div class="empty">Chưa có ghi chú hợp tác nào được lưu.</div>';return;}
+        $("#campusEntries").innerHTML=entries.map(item=>`<article class="panel entry">
+          <strong>${escapeHTML(item.school)}</strong>
+          <p class="muted" style="font-size:13px">${escapeHTML(item.role)} · ${escapeHTML(item.at?new Date(item.at).toLocaleString("vi-VN"):"")}</p>
+          ${item.note?`<p>${escapeHTML(item.note)}</p>`:""}
+        </article>`).join("");
+      }
+      $("#campusForm").addEventListener("submit",e=>{
+        e.preventDefault();
+        const school=$("#school").value.trim();if(!school){$("#school").focus();return;}
+        const entries=getCampus();entries.unshift({school,role:$("#role").value,note:$("#campusNote").value.trim(),at:new Date().toISOString()});
+        if(safeWrite(KEYS.campus,entries.slice(0,20))){
+          $("#campusStatus").textContent="Đã lưu ghi chú trên trình duyệt này.";
+          $("#campusForm").reset();renderCampus();showToast("Đã lưu ghi chú hợp tác.");
+        }
+      });
+      renderCampus();
+    })();
+  </script>
+</body>
+</html>
