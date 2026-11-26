@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Máy tính đơn giản</title>
+    <style>
+        /* ===== CSS - Làm đẹp giao diện ===== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background-color: #f0f2f5;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .calculator {
+            background-color: #222;
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+            width: 320px;
+        }
+
+        /* Màn hình hiển thị */
+        .display {
+            background-color: #000;
+            color: #0f0;
+            font-size: 2.5rem;
+            text-align: right;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 15px;
+            min-height: 70px;
+            overflow: hidden;
+        }
+
+        /* Lưới các nút */
+        .buttons {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+        }
+
+        button {
+            padding: 18px;
+            font-size: 1.4rem;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: 0.2s;
+            background-color: #333;
+            color: white;
+        }
+
+        button:hover {
+            background-color: #555;
+        }
+
+        button:active {
+            transform: scale(0.95);
+        }
+
+        /* Nút đặc biệt */
+        .operator {
+            background-color: #ff9500;
+        }
+
+        .operator:hover {
+            background-color: #e08600;
+        }
+
+        .equal {
+            background-color: #28a745;
+            grid-column: span 2; /* Nút = chiếm 2 cột */
+        }
+
+        .equal:hover {
+            background-color: #218838;
+        }
+
+        .clear {
+            background-color: #dc3545;
+        }
+
+        .clear:hover {
+            background-color: #c82333;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="calculator">
+        <!-- Màn hình hiển thị -->
+        <div class="display" id="display">0</div>
+
+        <!-- Các nút -->
+        <div class="buttons">
+            <button class="clear" onclick="clearDisplay()">C</button>
+            <button onclick="appendToDisplay('(')">(</button>
+            <button onclick="appendToDisplay(')')">)</button>
+            <button class="operator" onclick="appendToDisplay('/')">÷</button>
+
+            <button onclick="appendToDisplay('7')">7</button>
+            <button onclick="appendToDisplay('8')">8</button>
+            <button onclick="appendToDisplay('9')">9</button>
+            <button class="operator" onclick="appendToDisplay('*')">×</button>
+
+            <button onclick="appendToDisplay('4')">4</button>
+            <button onclick="appendToDisplay('5')">5</button>
+            <button onclick="appendToDisplay('6')">6</button>
+            <button class="operator" onclick="appendToDisplay('-')">−</button>
+
+            <button onclick="appendToDisplay('1')">1</button>
+            <button onclick="appendToDisplay('2')">2</button>
+            <button onclick="appendToDisplay('3')">3</button>
+            <button class="operator" onclick="appendToDisplay('+')">+</button>
+
+            <button onclick="appendToDisplay('0')">0</button>
+            <button onclick="appendToDisplay('.')">.</button>
+            <button class="equal" onclick="calculate()">=</button>
+        </div>
+    </div>
+
+    <script>
+        // ===== JAVASCRIPT - Xử lý logic =====
+
+        // Lấy phần tử hiển thị
+        const display = document.getElementById("display");
+
+        // Hàm thêm số/toán tử vào màn hình
+        function appendToDisplay(value) {
+            // Nếu đang hiển thị 0 thì xóa 0 đi
+            if (display.innerText === "0" && value !== ".") {
+                display.innerText = value;
+            } else {
+                display.innerText += value;
+            }
+        }
+
+        // Hàm xóa hết (nút C)
+        function clearDisplay() {
+            display.innerText = "0";
+        }
+
+        // Hàm tính kết quả (nút =)
+        function calculate() {
+            try {
+                // Dùng hàm eval() để tính biểu thức
+                // Lưu ý: eval khá nguy hiểm trong thực tế, nhưng với bài học cơ bản thì ổn
+                let result = eval(display.innerText);
+                display.innerText = result;
+            } catch (error) {
+                display.innerText = "Lỗi";
+            }
+        }
+    </script>
+
+</body>
+</html>
